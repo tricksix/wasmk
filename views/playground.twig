@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 mx-auto mt-5">
+          <form>
+            <div class="form-group">
+              <label for="hp">
+                No. HP
+              </label>
+              <input type="text" class="form-control" id="hp" name="hp" placeholder="">
+            </div>
+            <div class="form-group">
+              <label for="pesan">
+                Pesan
+              </label>
+              <textarea class="form-control" id="pesan" name="pesan"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="jml">
+                Jumlah Pesan
+              </label>
+              <input type="number" class="form-control" id="jml" name="jml" value="1" min="1" placeholder="">
+            </div>
+            <button id="btn_kirim" type="button" class="btn btn-primary">
+              Kirim
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+
+      function convert_wa_id(no) {
+        if(no.indexOf("@c.us") == -1) {
+          no = `${no}@c.us`;
+        }
+        if(no.indexOf("+62") > -1) {
+          no = no.replace("+", "");
+        }
+        if(no.substring(0, 1) === "0") {
+          no = no.split("");
+          delete no[0];
+          no = `62${no.join("")}`;
+        }
+        return no;
+      }
+
+      $("#btn_kirim").on("click", async () => {
+        let hp = $("#hp").val();
+        let pesan = $("#pesan").val();
+        let jml = $("#jml").val();
+
+        if($.isEmptyObject(hp) || $.isEmptyObject(pesan) || $.isEmptyObject(jml)) {
+          alert("form tidak boleh kosong");
+          return;
+        }
+
+        try {
+
+          let response = await Promise.resolve($.ajax({
+            contentType: 'application/json',
+            data: JSON.stringify({
+              phone_number: convert_wa_id(hp),
+              phone_message: pesan,
+              qty: jml
+            }),
+            dataType: 'json',
+            processData: false,
+            type: 'POST',
+            url: '/apiSendText'
+          }));
+
+          if(!response.error) {
+            alert("berhasil kirim pesan");
+          } else {
+            alert("gagal mengirim pesan");
+          }
+        } catch(e) {
+          console.log(e.toString());
+        }
+      });
+    </script>
+  </body>
+</html>
