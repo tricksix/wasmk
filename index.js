@@ -171,7 +171,7 @@ async function start(client){
     }
   });
 
-  const PQueue = (await simport('../bootwa/node_modules/p-queue/dist/index.js')).default;
+  const PQueue = (await simport('../wasmk/node_modules/p-queue/dist/index.js')).default;
 
   const queue = new PQueue({
     concurrency: 1
