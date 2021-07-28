@@ -21,7 +21,7 @@ app.set('twig options', {
     strict_variables: false
 });
 
-const PORT = 1234;
+const PORT = 5000;
 
 var State = {
   statusSession: null
@@ -171,7 +171,7 @@ async function start(client){
     }
   });
 
-  const PQueue = (await simport('../wasmk/node_modules/p-queue/dist/index.js')).default;
+  const PQueue = (await simport('../app/node_modules/p-queue/dist/index.js')).default;
 
   const queue = new PQueue({
     concurrency: 1
